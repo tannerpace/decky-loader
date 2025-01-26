@@ -14,34 +14,36 @@ const titleStyles: CSSProperties = {
   top: '0px',
 };
 
+const buttonStyles: CSSProperties = {
+  height: '28px',
+  width: '40px',
+  minWidth: 0,
+  padding: '10px 12px',
+};
+
 const TitleView: FC = () => {
   const { activePlugin, closeActivePlugin } = useDeckyState();
   const { t } = useTranslation();
 
-  const onSettingsClick = () => {
-    Navigation.Navigate('/decky/settings');
+  const handleNavigation = (path: string) => {
+    Navigation.Navigate(path);
     Navigation.CloseSideMenus();
   };
 
-  const onStoreClick = () => {
-    Navigation.Navigate('/decky/store');
-    Navigation.CloseSideMenus();
-  };
-
-  if (activePlugin === null) {
+  if (!activePlugin) {
     return (
       <Focusable style={titleStyles} className={staticClasses.Title}>
         <div style={{ marginRight: 'auto', flex: 0.9 }}>Decky</div>
         <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-          onClick={onStoreClick}
+          style={buttonStyles}
+          onClick={() => handleNavigation('/decky/store')}
           onOKActionDescription={t('TitleView.decky_store_desc')}
         >
           <FaStore style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
         <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-          onClick={onSettingsClick}
+          style={buttonStyles}
+          onClick={() => handleNavigation('/decky/settings')}
           onOKActionDescription={t('TitleView.settings_desc')}
         >
           <BsGearFill style={{ marginTop: '-4px', display: 'block' }} />
@@ -52,13 +54,10 @@ const TitleView: FC = () => {
 
   return (
     <Focusable className={staticClasses.Title} style={titleStyles}>
-      <DialogButton
-        style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-        onClick={closeActivePlugin}
-      >
+      <DialogButton style={buttonStyles} onClick={closeActivePlugin}>
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
-      {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
+      {activePlugin.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
     </Focusable>
   );
 };

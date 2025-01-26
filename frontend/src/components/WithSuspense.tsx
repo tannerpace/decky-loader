@@ -1,36 +1,33 @@
 import { Focusable, SteamSpinner } from '@decky/ui';
-import { FunctionComponent, ReactElement, ReactNode, Suspense } from 'react';
+import { FunctionComponent, ReactNode, Suspense, CSSProperties } from 'react';
 
 interface WithSuspenseProps {
   children: ReactNode;
   route?: boolean;
 }
+const getFallbackStyles = (isRoute: boolean | undefined): CSSProperties => ({
+  overflowY: 'scroll',
+  backgroundColor: 'transparent',
+  ...(isRoute && {
+    marginTop: '40px',
+    height: 'calc(100% - 40px)',
+  }),
+});
 
-// Nice little wrapper around Suspense so we don't have to duplicate the styles and code for the loading spinner
-const WithSuspense: FunctionComponent<WithSuspenseProps> = (props) => {
-  const propsCopy = { ...props };
-  delete propsCopy.children;
-  (props.children as ReactElement)?.props && Object.assign((props.children as ReactElement).props, propsCopy); // There is probably a better way to do this but valve does it this way so ¯\_(ツ)_/¯
+const WithSuspense: FunctionComponent<WithSuspenseProps> = ({ children, route }) => {
   return (
     <Suspense
       fallback={
         <Focusable
-          // needed to enable focus ring so that the focus properly resets on load
+          // Enables focus ring for proper reset on load
           onActivate={() => {}}
-          style={{
-            overflowY: 'scroll',
-            backgroundColor: 'transparent',
-            ...(props.route && {
-              marginTop: '40px',
-              height: 'calc( 100% - 40px )',
-            }),
-          }}
+          style={getFallbackStyles(route)}
         >
           <SteamSpinner background="transparent" />
         </Focusable>
       }
     >
-      {props.children}
+      {children}
     </Suspense>
   );
 };

@@ -1,12 +1,16 @@
-import { CSSProperties, FunctionComponent } from 'react';
+import React, { CSSProperties, FunctionComponent } from 'react';
 
 interface NotificationBadgeProps {
   show?: boolean;
   style?: CSSProperties;
 }
 
-const NotificationBadge: FunctionComponent<NotificationBadgeProps> = ({ show, style }) => {
-  return show ? (
+const NotificationBadge: FunctionComponent<NotificationBadgeProps> = ({ show = false, style }) => {
+  if (!show) {
+    return <></>;
+  }
+
+  return (
     <div
       style={{
         position: 'absolute',
@@ -19,7 +23,7 @@ const NotificationBadge: FunctionComponent<NotificationBadgeProps> = ({ show, st
         ...style,
       }}
     />
-  ) : null;
+  );
 };
 
 export default NotificationBadge;
